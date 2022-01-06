@@ -1,15 +1,25 @@
 ﻿using System.ComponentModel;
 using Xamarin.Forms;
 using partieldev.ViewModels;
+using Xamarin.Essentials;
+using System;
+using System.Windows.Input;
 
 namespace partieldev.Views
 {
-    public partial class ItemDetailPage : ContentPage
+    public partial class VideoDetailPage : ContentPage
     {
-        public ItemDetailPage()
+        public VideoDetailPage()
         {
             InitializeComponent();
-            BindingContext = new ItemDetailViewModel();
+            BindingContext = new VideoDetailViewModel();
+        }
+
+        public async void playVideo(object sender, EventArgs e)
+        {
+            Button menuItem = sender as Button;
+            string itemID = menuItem.CommandParameter as string;
+            await Shell.Current.GoToAsync($"{nameof(VideoPage)}?itemId={itemID}");
         }
     }
 }

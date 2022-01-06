@@ -12,7 +12,7 @@ namespace partieldev.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        public IDataStore<Video> DataStore => DependencyService.Get<IDataStore<Video>>();
 
         bool isBusy = false;
         public bool IsBusy

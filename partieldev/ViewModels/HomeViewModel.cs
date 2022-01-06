@@ -10,24 +10,26 @@ using partieldev.Views;
 
 namespace partieldev.ViewModels
 {
-    public class ItemsViewModel : BaseViewModel
+    public class HomeViewModel : BaseViewModel
     {
-        private Item _selectedItem;
+        private Video _selectedItem;
 
-        public ObservableCollection<Item> Items { get; }
-        public Command LoadItemsCommand { get; }
+        public ObservableCollection<Video> Videos { get; }
+        public Command LoadVideosCommand { get; }
         public Command AddItemCommand { get; }
-        public Command<Item> ItemTapped { get; }
+        public Command<Video> ItemTapped { get; }
 
-        public ItemsViewModel()
+        public HomeViewModel()
         {
-            Title = "Browse";
-            Items = new ObservableCollection<Item>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            Title = "Liste des films";
+            Videos = new ObservableCollection<Video>();
+            LoadVideosCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            ItemTapped = new Command<Video>(OnVideoSelected);
+        }
 
-            ItemTapped = new Command<Item>(OnItemSelected);
-
-            AddItemCommand = new Command(OnAddItem);
+        public double ScreenWith
+        {
+            get => Application.Current.MainPage.Width;
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -36,12 +38,13 @@ namespace partieldev.ViewModels
 
             try
             {
-                Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                Videos.Clear();
+                var items = await DataStore.GetVideosAsync(true);
                 foreach (var item in items)
                 {
-                    Items.Add(item);
+                    Videos.Add(item);
                 }
+                Console.WriteLine(Videos);
             }
             catch (Exception ex)
             {
@@ -59,28 +62,21 @@ namespace partieldev.ViewModels
             SelectedItem = null;
         }
 
-        public Item SelectedItem
+        public Video SelectedItem
         {
             get => _selectedItem;
             set
             {
                 SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
+                OnVideoSelected(value);
             }
         }
 
-        private async void OnAddItem(object obj)
-        {
-            await Shell.Current.GoToAsync(nameof(NewItemPage));
-        }
-
-        async void OnItemSelected(Item item)
+        async void OnVideoSelected(Video item)
         {
             if (item == null)
                 return;
-
-            // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            await Shell.Current.GoToAsync($"{nameof(VideoDetailPage)}?{nameof(VideoDetailViewModel.ItemId)}={item.Id}");
         }
     }
 }

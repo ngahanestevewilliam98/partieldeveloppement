@@ -1,18 +1,56 @@
 ﻿using System;
-using System.Windows.Input;
-using Xamarin.Essentials;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace partieldev.ViewModels
 {
-    public class AboutViewModel : BaseViewModel
+    [QueryProperty(nameof(ItemId), "itemId")]
+    public class VideoViewModel : BaseViewModel
     {
-        public AboutViewModel()
+        private string text;
+        private string videoUrl;
+        public string id;
+
+        public string Text
         {
-            Title = "About";
-            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://aka.ms/xamarin-quickstart"));
+            get => text;
+            set => SetProperty(ref text, value);
         }
 
-        public ICommand OpenWebCommand { get; }
+        public string Id
+        {
+            get => id;
+            set => SetProperty(ref id, value);
+        }
+
+        public string VideoUrl
+        {
+            get => videoUrl;
+            set => SetProperty(ref videoUrl, value);
+        }
+
+
+        public string ItemId
+        {
+            set
+            {
+                LoadItemId(value);
+            }
+        }
+
+        public async void LoadItemId(string itemId)
+        {
+            try
+            {
+                var item = await DataStore.GetVideoAsync(itemId);
+                Id = item.Id;
+                Text = item.Text;
+                VideoUrl = item.VideoUrl;
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("Failed to Load Item");
+            }
+        }
     }
 }

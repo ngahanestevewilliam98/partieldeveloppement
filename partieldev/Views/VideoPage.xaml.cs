@@ -5,9 +5,10 @@ using Xamarin.Forms.Xaml;
 
 namespace partieldev.Views
 {
-    public partial class AboutPage : ContentPage
+    public partial class VideoPage : ContentPage
     {
-        public AboutPage()
+
+        public VideoPage()
         {
             InitializeComponent();
         }
